@@ -4,6 +4,7 @@ For usage on .sam alignment files of shotgun sequencing reads, such as those fro
 
 Step 1: Aggregate the % genome coverage of each species in all samples.
 - Output: List of % genome coverage for each species.   
+
 Step 2: Filter out alignments to low coverage genomes from the sam files
 - Output: sam files with fewer false positives.
 
