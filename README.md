@@ -28,7 +28,7 @@ Output: Filtered sam files
 python get_ncbi_to_exclude_from_coverages.py -i coverage_output.tsv -c 0.1 -o ids_to_filter.txt
 ```
 
-2. Use the list of ncbi ids to filter to filter the sam files.  
+2. Use the list of ncbi ids to filter to filter the sam files. Do for each sam file.  
 ```
 python filter_sam.py -s alignment.sam -f ids_to_filter.txt -o filtered_alignment.sam
 ```
