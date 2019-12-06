@@ -23,10 +23,13 @@ python full_pipeline_python.py sam_list.txt coverage_output.tsv
 Input: Coverage tsv generated from previous step and sam files
 Output: Filtered sam files
 
-First, choose a coverage cutoff and get the list of ncbi ids to filter from the sam alignments.
+First, choose a coverage cutoff and get the list of ncbi ids to filter from the sam alignments.  
+
 python get_ncbi_to_exclude_from_coverages.py -i coverage_output.tsv -c 0.1 -o ids_to_filter.txt
 
-Second, use the list of ncbi ids to filter to filter the sam files.
+
+Second, use the list of ncbi ids to filter to filter the sam files.  
+
 python filter_sam.py -s alignment.sam -f ids_to_filter.txt -o filtered_alignment.sam
 
 
