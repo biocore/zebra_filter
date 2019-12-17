@@ -16,7 +16,7 @@ Then biom tables can be generated from those sam alignments using SHOGUN or gOTU
 Input: txt file list of sam files locations. 1 file per line
 Output: tsv file list of aggregated coverage % per hit genome 
 ```
-python full_pipeline_python.py sam_list.txt coverage_output.tsv
+python full_pipeline_python.py -i sam_list.txt -o coverage_output.tsv
 ```
 
 ### Filter sam files
