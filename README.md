@@ -19,11 +19,12 @@ Output: tsv file list of aggregated coverage % per hit genome
 Usage: calculate_coverages.py [OPTIONS]
 
 Options:
-  -i, --sam TEXT     List of sam files 1 file per line.  [required]
-  -o, --output TEXT  Output file name for list of coverages.  [required]
-  --database TEXT    Database file with ncbi ids, taxon ids, genome lengths,
-                     and ncbi ids.
-  --help             Show this message and exit.
+  -i, --input TEXT     Input: Text file list of sam files. 1 file per line.
+                       [required]
+  -o, --output TEXT    Output: file name for list of coverages.  [required]
+  -d, --database TEXT  Database: tsv file with ncbi ids, taxon ids, genome
+                       lengths, and ncbi ids.
+  --help               Show this message and exit.
 ```
 
 ### Filter sam files
@@ -37,7 +38,8 @@ Options:
   -s, --sam TEXT       Sam file to filter or directory of sam files to filter.
                        [required]
   -c, --cutoff FLOAT   Minimum % genome coverage.  [default: 0.1]
-  -d, --database TEXT  File linking ncbi_id to taxonomy string.  [required]
-  -o, --output TEXT    Directory to write output files.  [required]
+  -d, --database TEXT  Database: tsv file with ncbi ids, taxon ids, genome
+                       lengths, and ncbi ids.  [required]
+  -o, --output TEXT    Output directory to write output files.  [required]
   --help               Show this message and exit.
 ```

@@ -6,11 +6,11 @@ from os import path
 import click
 
 @click.command()
-@click.option('--sam','-i', required=True, help="List of sam files 1 file per line.")
-@click.option('--output','-o', required=True, help='Output file name for list of coverages.')
-@click.option('--database', default="databases/WoL/wol_zebra_db.tsv", help='Database file with ncbi ids, taxon ids, genome lengths, and ncbi ids.')
+@click.option('-i',"--input", required=True, help="Input: Text file list of sam files. 1 file per line.")
+@click.option('-o',"--output", required=True, help='Output: file name for list of coverages.')
+@click.option('-d',"--database", default="databases/WoL/wol_zebra_db.tsv", help='Database: tsv file with ncbi ids, taxon ids, genome lengths, and ncbi ids.')
 
-def calculate_coverages(sam, output, database):
+def calculate_coverages(input, output, database):
     ###################################
     #Calculate coverage of each contig#
     ###################################

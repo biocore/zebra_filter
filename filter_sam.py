@@ -11,8 +11,8 @@ import os
 @click.option('--input','-i', help='Input coverage .tsv file generated from Zebra.', required=True)
 @click.option('--sam','-s', help='Sam file to filter or directory of sam files to filter.',required=True)
 @click.option('--cutoff','-c', default=0.1, help='Minimum % genome coverage.', show_default=True)
-@click.option('--database','-d', help='File linking ncbi_id to taxonomy string.', required=True)
-@click.option('--output','-o', help='Directory to write output files.', required=True)
+@click.option('--database','-d', help='Database: tsv file with ncbi ids, taxon ids, genome lengths, and ncbi ids.', required=True)
+@click.option('--output','-o', help='Output directory to write output files.', required=True)
 
 
 def filter_sam(input, sam, cutoff, database, output):
