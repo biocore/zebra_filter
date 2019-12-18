@@ -1,5 +1,3 @@
-#Zebra filter full pipeline
-
 import pandas as pd
 from collections import defaultdict
 import re

@@ -14,22 +14,30 @@ Then biom tables can be generated from those sam alignments using SHOGUN or gOTU
 
 ### Calculate coverages  
 Input: txt file list of sam files locations. 1 file per line
-Output: tsv file list of aggregated coverage % per hit genome 
+Output: tsv file list of aggregated coverage % per hit genome
 ```
-python full_pipeline_python.py -i sam_list.txt -o coverage_output.tsv
+Usage: calculate_coverages.py [OPTIONS]
+
+Options:
+  -i, --sam TEXT     List of sam files 1 file per line.  [required]
+  -o, --output TEXT  Output file name for list of coverages.  [required]
+  --database TEXT    Database file with ncbi ids, taxon ids, genome lengths,
+                     and ncbi ids.
+  --help             Show this message and exit.
 ```
 
 ### Filter sam files
-Input: Coverage tsv generated from previous step and sam files
-Output: Filtered sam files
 
-1. Choose a coverage cutoff and get the list of ncbi ids to filter from the sam alignments.  
 ```
-python get_ncbi_to_exclude_from_coverages.py -i coverage_output.tsv -c 0.1 -o ids_to_filter.txt
-```
+Usage: filter_sam.py [OPTIONS]
 
-2. Use the list of ncbi ids to filter to filter the sam files. Do for each sam file.  
+Options:
+  -i, --input TEXT     Input coverage .tsv file generated from Zebra.
+                       [required]
+  -s, --sam TEXT       Sam file to filter or directory of sam files to filter.
+                       [required]
+  -c, --cutoff FLOAT   Minimum % genome coverage.  [default: 0.1]
+  -d, --database TEXT  File linking ncbi_id to taxonomy string.  [required]
+  -o, --output TEXT    Directory to write output files.  [required]
+  --help               Show this message and exit.
 ```
-python filter_sam.py -s alignment.sam -f ids_to_filter.txt -o filtered_alignment.sam
-```
-
