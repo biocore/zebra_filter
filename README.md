@@ -1,5 +1,9 @@
-# zebra_filter
-Filtering out false taxonomic hits from shotgun sequencing based on aggregated genome coverage of all samples in dataset.
+# Zebra Filter
+Filtering out false taxonomic hits from shotgun sequencing based on aggregated genome coverage of all samples in dataset.  
+
+_When you hear hoofs, think horse, not zebra._  
+-_Theodore Woodward_
+
 ___
 ### Overview
 False positives are common in metagenomic sequencing because databases are incomplete and do not represent many of the microbes actually in our samples. Short shotgun sequencing reads will incorrectly map to short common motifs and transposable elements, making it look like an microbe is present when it actually isn't. One way to distinguish these false positives is by looking at genome coverage; microbes that are actually present will have high genome coverage, while mis-mappings to short motifs will have low genome coverage. A problem with this coverage approach is that shotgun sequencing is often shallow for each sample, so coverage of all microbes will be low whether it is acually there or not.  
