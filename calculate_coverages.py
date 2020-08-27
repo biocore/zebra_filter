@@ -4,71 +4,54 @@ import re
 from sys import argv
 from os import path
 import click
+from glob import glob
 
 @click.command()
-@click.option('-i',"--input", required=True, help="Input: Text file list of sam files. 1 file per line.")
+@click.option('-i',"--input", required=True, help="Input: Directory of sam files (files must end in .sam).")
 @click.option('-o',"--output", required=True, help='Output: file name for list of coverages.')
-@click.option('-d',"--database", default="databases/WoL/wol_zebra_db.tsv", help='Database: tsv file with ncbi ids, taxon ids, genome lengths, and ncbi ids.')
+@click.option('-d',"--database", default="databases/WoL/metadata.tsv", help='WoL genome metadata file.',show_default=True)
 
 def calculate_coverages(input, output, database):
     ###################################
     #Calculate coverage of each contig#
     ###################################
-    contig_dict = defaultdict(set)
-    with open(sam_list,'r') as open_list_file:
-        for samfile in open_list_file:
-            with open(samfile.strip(), 'r') as open_sam_file:
-                for line in open_sam_file:
-                #Get values for contig, location, and length
-                    linesplit= line.split()
-                    contig = linesplit[2]
-                    location = int(linesplit[3])
-                    #Get sum of lengths in CIGAR string. Counting deleitons as alignment because they should be small
-                    length_string = linesplit[5]
-                    length = sum([int(x) for x in re.split("[a-zA-Z]",length_string) if x])
-                    #Add range to contig_dict
-                    for i in range(location,location+length):
-                        contig_dict[contig].add(i)
+    gotu_dict = defaultdict(set)
+    file_list = glob(input + "/*.sam")
+    for samfile in file_list:
+        with open(samfile.strip(), 'r') as open_sam_file:
+            for line in open_sam_file:
+            #Get values for contig, location, and length
+                linesplit= line.split()
+                gotu = linesplit[2]
+                location = int(linesplit[3])
+                #Get sum of lengths in CIGAR string. Counting deleitons as alignment because they should be small
+                length_string = linesplit[5]
+                length = sum([int(x) for x in re.split("[a-zA-Z]",length_string) if x])
+                #Add range to contig_dict
+                for i in range(location,location+length):
+                    gotu_dict[gotu].add(i)
 
 
     ###################################
     #Get information from database#
     ###################################
-    ncbi_taxid_dict = dict()
-    taxid_length_dict = dict()
-    taxid_taxonomy_dict = dict()
-
-    database_df = pd.read_csv(database, sep='\t')
-    for i,line in database_df.iterrows():
-        ncbi_taxid_dict[line.ncbi] = line.taxid
-        taxid_length_dict[line.ncbi] = int(line.total_length)
-        taxid_taxonomy_dict[line.taxid] = line.taxonomy
-
-    ###funcitons to use helper information
-    def get_taxid(x):
-        return(ncbi_taxid_dict[x["ncbi_id"]])
-    def get_taxonomy(x):
-        return(taxid_taxonomy_dict[str(x.name)])
-    def get_length(x):
-        return(taxid_length_dict[str(x.name)])
+    md = pd.read_table(database).loc[:,["#genome","total_length","unique_name"]]
+    md.columns = ["gotu","total_length","strain"]
+    md = md.set_index("gotu")
 
     #####################
     #Calculate coverages#
     #####################
     #Make dataframe from dicitonary of coverages of each contig
-    cov = pd.DataFrame({"ncbi_id":list(contig_dict.keys()),
-                        "covered_length" : [len(x) for x in contig_dict.values()] } )
-    #Merge contigs by taxid
-    cov["taxid"] = cov.apply(func=get_taxid, axis=1)
-    cov = cov.groupby("taxid").agg({"covered_length":sum})
-
-    #Add total length of each taxid and calculate coverage percent
-    cov["total_length"] = cov.apply(func=get_length, axis=1)
-    cov["coverage_pct"] = cov.apply(func= lambda x : x["covered_length"]/x["total_length"], axis=1)
-
-    #Add taxonomy and group taxids by taxonomy name. Take the max covered taxid for each taxonomy
-    cov["taxonomy"] = cov.apply(func=get_taxonomy, axis=1)
-    cov = cov.groupby("taxonomy").agg({"covered_length":"max","coverage_pct":"max"}).sort_values("coverage_pct",ascending=False)
+    cov = pd.DataFrame({"gotu":list(gotu_dict.keys()),
+                        "covered_length" : [len(x) for x in gotu_dict.values()] } )
+    cov= cov.set_index("gotu")
+    cov = cov.sort_values("covered_length", ascending=False)
+    #Add genome metadata
+    cov = cov.join(md, how="left")
+    #Calculate coverage percent
+    cov["coverage_ratio"] = cov.apply(func= lambda x : x["covered_length"]/x["total_length"], axis=1)
+    cov = cov.loc[:,["covered_length","total_length","coverage_ratio","strain"]]
 
     ##############
     #Write output#
