@@ -1,0 +1,7 @@
+Python 3.7.3
+
+Python non-standard libraries
+pandas 0.25.3 
+Click 7.0
+
+Tested with Woltka 0.1.0
