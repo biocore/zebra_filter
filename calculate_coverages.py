@@ -30,9 +30,15 @@ def calculate_coverages(input, output, database):
         if samfile.endswith(".sam"):
             open_sam_file = open(samfile.strip(), 'r')
         elif samfile.endswith(".sam.gz"):
-            open_sam_file = gzip.open(samfile.strip(), 'r')
+            open_sam_file = gzip.open(
+                samfile.strip(),
+                mode='rt',
+                encoding='utf-8')
         elif samfile.endswith(".sam.xz"):
-            open_sam_file = lzma.open(samfile.strip(), 'r')
+            open_sam_file = lzma.open(
+                samfile.strip(),
+                mode='rt',
+                encoding='utf-8')
 
         with open_sam_file:
             for line in open_sam_file:
