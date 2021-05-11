@@ -5,6 +5,10 @@ from sys import argv
 from os import path
 import click
 from glob import glob
+import gzip
+import lzma
+
+
 
 @click.command()
 @click.option('-i',"--input", required=True, help="Input: Directory of sam files (files must end in .sam).")
@@ -17,20 +21,31 @@ def calculate_coverages(input, output, database):
     ###################################
     gotu_dict = defaultdict(set)
     file_list = glob(input + "/*.sam")
+    file_list_gz = glob(input + "/*.sam.gz")
+    file_list_xz = glob(input + "/*.sam.xz")
+
+    file_list = file_list + file_list_gz + file_list_xz
     for samfile in file_list:
-        with open(samfile.strip(), 'r') as open_sam_file:
+        open_sam_file = None
+        if samfile.endswith(".sam"):
+            open_sam_file = open(samfile.strip(), 'r')
+        elif samfile.endswith(".sam.gz"):
+            open_sam_file = gzip.open(samfile.strip(), 'r')
+        elif samfile.endswith(".sam.xz"):
+            open_sam_file = lzma.open(samfile.strip(), 'r')
+
+        with open_sam_file:
             for line in open_sam_file:
-            #Get values for contig, location, and length
+                #Get values for contig, location, and length
                 linesplit= line.split()
                 gotu = linesplit[2]
                 location = int(linesplit[3])
-                #Get sum of lengths in CIGAR string. Counting deleitons as alignment because they should be small
+                #Get sum of lengths in CIGAR string. Counting deletions as alignment because they should be small
                 length_string = linesplit[5]
                 length = sum([int(x) for x in re.split("[a-zA-Z]",length_string) if x])
                 #Add range to contig_dict
-                for i in range(location,location+length):
+                for i in range(location, location+length):
                     gotu_dict[gotu].add(i)
-
 
     ###################################
     #Get information from database#
