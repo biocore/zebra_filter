@@ -30,7 +30,11 @@ def calculate_coverages(input, output, database):
                 #Add range to contig_dict
                 for i in range(location,location+length):
                     gotu_dict[gotu].add(i)
-            print(len(gotu_dict))
+            print("Num GOTUs", len(gotu_dict))
+            sumsize = 0
+            for gotu in gotu_dict:
+                sumsize += len(gotu_dict[gotu])
+            print("Rough mem size:", sumsize)
 
 
     ###################################
