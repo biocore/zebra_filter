@@ -30,6 +30,7 @@ def calculate_coverages(input, output, database):
                 #Add range to contig_dict
                 for i in range(location,location+length):
                     gotu_dict[gotu].add(i)
+            print(len(gotu_dict))
 
 
     ###################################
