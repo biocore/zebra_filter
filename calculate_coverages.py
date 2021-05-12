@@ -39,7 +39,8 @@ def calculate_coverages(input, output, database):
                 samfile.strip(),
                 mode='rt',
                 encoding='utf-8')
-
+else:
+    raise IOError("Unrecognized file extension on '%s'." % samfile)
         with open_sam_file:
             for line in open_sam_file:
                 #Get values for contig, location, and length
