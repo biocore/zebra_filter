@@ -39,7 +39,7 @@ def stress_test(seed, num_reads):
 
     print(srl_len)
     print(len(intset))
-    print(len(srl.nodes))
+    print(len(srl.ranges))
 
 seed = 127
 for reads in [1, 10, 100, 1000, 10000, 100000, 1000000, 10000000]:

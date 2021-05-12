@@ -1,73 +1,61 @@
-class RangeNode:
-    def __init__(self, val, is_start):
-        self.val = val
-        self.is_start = is_start
-        self.other = None
-
-    def length(self):
-        if self.is_start:
-            return self.other.val - self.val + 1
-        else:
-            return self.val - self.other.val + 1
-
-
 class IndexRange:
-    # start_val and end_val are both inclusive.
+    # start and end are both inclusive.
     # IndexRange(1,1) is length 1
     # IndexRange(1,0) is invalid
-    def __init__(self, start_val, end_val):
-        self.start = RangeNode(start_val, True)
-        self.end = RangeNode(end_val, False)
-        self.start.other = self.end
-        self.end.other = self.start
+    def __init__(self, start, end):
+        self.start = start
+        self.end = end
+
+    def __repr__(self):
+        return str((self.start, self.end))
+
+    def __len__(self):
+        return self.end - self.start + 1
 
 
 class SortedRangeList:
     def __init__(self):
-        self.nodes = []
+        self.ranges = []
 
     def add_range(self, range):
-        if range.end.val < range.start.val:
-            return
-        self.nodes.append(range.start)
+        self.ranges.append(range)
 
     def compress(self):
-        # We sort such that start nodes come before end nodes of the same value
-        self.nodes.sort(key=lambda x: x.val * 2 - x.is_start)
+        # Sort ranges by start index
+        self.ranges.sort(key=lambda r: r.start)
 
-        new_nodes = []
+        new_ranges = []
         start_val = None
         end_val = None
 
-        for node in self.nodes:
+        for r in self.ranges:
             if end_val is None:
-                # case 1: no active node, start active node.
-                start_val = node.val
-                end_val = node.other.val
-            elif end_val >= node.val - 1:
-                # case 2: active node continues through this range
+                # case 1: no active range, start active range.
+                start_val = r.start
+                end_val = r.end
+            elif end_val >= r.start - 1:
+                # case 2: active range continues through this range
                 # extend active range
-                end_val = max(end_val, node.other.val)
-            else:  # if end_val < node.val - 1:
-                # case 3: active node ends before this range begins
-                # write new node out, then start new active node
+                end_val = max(end_val, r.end)
+            else:  # if end_val < range.start - 1:
+                # case 3: active range ends before this range begins
+                # write new range out, then start new active range
                 new_range = IndexRange(start_val, end_val)
-                new_nodes.append(new_range.start)
-                start_val = node.val
-                end_val = node.other.val
+                new_ranges.append(new_range)
+                start_val = r.start
+                end_val = r.end
 
         if end_val is not None:
             new_range = IndexRange(start_val, end_val)
-            new_nodes.append(new_range.start)
+            new_ranges.append(new_range)
 
-        self.nodes = new_nodes
+        self.ranges = new_ranges
 
     def compute_length(self):
         total = 0
-        for node in self.nodes:
-            total += node.length()
+        for r in self.ranges:
+            total += len(r)
         return total
 
     def __str__(self):
-        pairs = [(node.val, node.other.val) for node in self.nodes]
-        return str(pairs)
+        return str(self.ranges)
