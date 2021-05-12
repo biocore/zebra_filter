@@ -1,4 +1,6 @@
 class IndexRange:
+    __slots__ = ['start', 'end']
+
     # start and end are both inclusive.
     # IndexRange(1,1) is length 1
     # IndexRange(1,0) is invalid
