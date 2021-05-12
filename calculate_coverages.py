@@ -5,6 +5,7 @@ from sys import argv
 from os import path
 import click
 from glob import glob
+from cover import SortedRangeList
 
 @click.command()
 @click.option('-i',"--input", required=True, help="Input: Directory of sam files (files must end in .sam).")
@@ -15,7 +16,7 @@ def calculate_coverages(input, output, database):
     ###################################
     #Calculate coverage of each contig#
     ###################################
-    gotu_dict = defaultdict(set)
+    gotu_dict = defaultdict(SortedRangeList)
     file_list = glob(input + "/*.sam")
     for samfile in file_list:
         with open(samfile.strip(), 'r') as open_sam_file:
@@ -28,12 +29,11 @@ def calculate_coverages(input, output, database):
                 length_string = linesplit[5]
                 length = sum([int(x) for x in re.split("[a-zA-Z]",length_string) if x])
                 #Add range to contig_dict
-                for i in range(location,location+length):
-                    gotu_dict[gotu].add(i)
+                gotu_dict[gotu].add_range(location, location + length - 1)
             print("Num GOTUs", len(gotu_dict))
             sumsize = 0
             for gotu in gotu_dict:
-                sumsize += len(gotu_dict[gotu])
+                sumsize += len(gotu_dict[gotu].ranges)
             print("Rough mem size:", sumsize)
 
 
