@@ -5,7 +5,7 @@ class SortedRangeList:
         self.since_compressed = 0
 
     def add_range(self, start, end):
-        self.ranges.append((start,end))
+        self.ranges.append((start, end))
         self.since_compressed += 1
         if self.autocompress is not None and \
                 self.since_compressed > self.autocompress:

@@ -6,8 +6,8 @@ from time import perf_counter
 def simple_test():
     srl = SortedRangeList(autocompress=None)
     for i in range(9, 0, -2):
-        srl.add_range(i,i)
-    srl.add_range(4,4)
+        srl.add_range(i, i)
+    srl.add_range(4, 4)
     srl.compress()
     assert(str(srl) == "[(1, 1), (3, 5), (7, 7), (9, 9)]")
 
@@ -56,7 +56,8 @@ def multi_compress_test(seed, num_reads):
             if i % compress_count == 0:
                 srl.compress()
         print(srl.compute_length())
-        print("Compress Counter: ", compress_count, " Performance: ", perf_counter() - start_srl)
+        print("Compress Counter: ", compress_count,
+              " Performance: ", perf_counter() - start_srl)
 
 
 simple_test()
