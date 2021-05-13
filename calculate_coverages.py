@@ -43,8 +43,12 @@ def calculate_coverages(input, output, database):
     #Calculate coverages#
     #####################
     #Make dataframe from dicitonary of coverages of each contig
-    cov = pd.DataFrame({"gotu":list(gotu_dict.keys()),
-                        "covered_length" : [len(x) for x in gotu_dict.values()] } )
+    cov = pd.DataFrame(
+        {
+            "gotu": list(gotu_dict.keys()),
+            "covered_length": [x.compute_length() for x in gotu_dict.values()]
+        }
+    )
     cov= cov.set_index("gotu")
     cov = cov.sort_values("covered_length", ascending=False)
     #Add genome metadata
