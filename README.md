@@ -28,7 +28,9 @@ Options:
                        databases/WoL/metadata.tsv]
   --help               Show this message and exit.
 ```
-The output .tsv contains information about the coverage of each genome in the dataset. This alone can be used to decide which genomes to filter out of your abundance table, without using _filter_sam.py_. However, if you would like to remove the false positive hits from your alignments, use the _filter_sam.py_ script.
+The output .tsv contains information about the coverage of each genome in the dataset. This alone can be used to decide which genomes to filter out of your abundance table, without using _filter_sam.py_. However, _this is not recommended_ as it will decrease the apparent number of reads rather than redistributing these to the other hits when using WoLTKA. 
+
+Instead, we recommend that you remove the false positive hits from your alignments, using the _filter_sam.py_ script and then provide these alignments to WoLTKA to regenerate your abundance table.
 ___
 #### filter_sam.py
 Filters alignments from .sam files based on a user-set coverage threshhold, creating new .sam files. Takes in the output .tsv from _calculate_coverages.py_, the directory of .sam alignments, a coverage threshhold, and an output folder. Outputs one filtered .sam alignment for each input alignment. The coverage threshhold is based on the _coverage_rato_ column of the input .tsv, which is the portion of the genome with unique coverage in the dataset.
