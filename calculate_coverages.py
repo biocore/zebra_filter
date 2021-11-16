@@ -42,12 +42,21 @@ def calculate_coverages(input, output, database):
             raise IOError("Unrecognized file extension on '%s'." % samfile)
         with open_sam_file:
             for line in open_sam_file:
+                if line.startswith("@"):
+                    # ignore header lines for now
+                    continue
+
                 #Get values for contig, location, and length
                 linesplit= line.split()
                 gotu = linesplit[2]
                 location = int(linesplit[3])
                 #Get sum of lengths in CIGAR string. Counting deletions as alignment because they should be small
                 length_string = linesplit[5]
+                if length_string == "*":
+                    # CIGAR String unavailable, skip.
+                    # We don't know what section of the genome was covered.
+                    continue
+
                 length = sum([int(x) for x in re.split("[a-zA-Z]",length_string) if x])
                 #Add range to contig_dict
                 gotu_dict[gotu].add_range(location, location + length - 1)
