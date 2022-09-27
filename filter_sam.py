@@ -82,7 +82,10 @@ def filter_sam(input, sam, cutoff, output):
         openin, openout = open_files(in_file, out_file)
         with openin, openout:
             for line in openin:
-                if line.split('\t')[2] in taxa_to_keep:
+                if line.startswith("@"):
+                    # Copy over header lines
+                    openout.write(line)
+                elif line.split('\t')[2] in taxa_to_keep:
                     openout.write(line)
 
 
