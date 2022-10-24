@@ -19,11 +19,17 @@ def calculate_coverages(input, output, database):
     #Calculate coverage of each contig#
     ###################################
     gotu_dict = defaultdict(SortedRangeList)
-    file_list = glob(input + "/*.sam")
-    file_list_gz = glob(input + "/*.sam.gz")
-    file_list_xz = glob(input + "/*.sam.xz")
 
-    file_list = file_list + file_list_gz + file_list_xz
+    if path.isdir(input):
+        file_list = glob(input + "/*.sam")
+        file_list_gz = glob(input + "/*.sam.gz")
+        file_list_xz = glob(input + "/*.sam.xz")
+        file_list = file_list + file_list_gz + file_list_xz
+    elif path.isfile(input):
+        file_list = [input]
+    else:
+        raise FileNotFoundError(input)
+
     for samfile in file_list:
         open_sam_file = None
         if samfile.endswith(".sam"):
