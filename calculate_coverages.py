@@ -77,7 +77,7 @@ def calculate_coverages(input, output, database):
     #####################
     #Calculate coverages#
     #####################
-    #Make dataframe from dicitonary of coverages of each contig
+    #Make dataframe from dictionary of coverages of each contig
     cov = pd.DataFrame(
         {
             "gotu": list(gotu_dict.keys()),
@@ -89,7 +89,7 @@ def calculate_coverages(input, output, database):
     #Add genome metadata
     cov = cov.join(md, how="left")
     #Calculate coverage percent
-    cov["coverage_ratio"] = cov.apply(func= lambda x : x["covered_length"]/x["total_length"], axis=1)
+    cov["coverage_ratio"] = cov['covered_length'] / cov['total_length']
     cov = cov.loc[:,["covered_length","total_length","coverage_ratio","strain"]]
 
     ##############
