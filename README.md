@@ -54,7 +54,7 @@ Example you can run using the test_data provided in this repo (_test_data/sample
 
 First run the first script: _calcualte_coverages.py_
 ```
-$ python calculate_coverages.py -i test_data/ -o test_data/sample_output.tsv -d databases/WoL/metadata.tsv
+$ python calculate_coverages.py -i test_data/sample_alignments/ -o test_data/sample_output.tsv -d databases/WoL/metadata.tsv
 ```
 View output
 ```
